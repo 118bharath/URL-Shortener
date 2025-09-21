@@ -1,0 +1,28 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "A simple web service that shortens long URLs into concise, shareable links and tracks link analytics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "URL-Shortener"
+  },
+  "keywords": [
+    "URL-Shortener",
+    "Node.js",
+    "JavaScript"
+  ],
+  "author": "Sai Bharath Vemula",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.18.1",
+    "nanoid": "^5.1.5",
+    "nodemon": "^3.1.10",
+    "shortid": "^2.2.17"
+  }
+}
