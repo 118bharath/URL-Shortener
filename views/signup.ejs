@@ -6,16 +6,78 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Signup</h1>
-    <form action="/user" method="post">
-        <label>Full Name</label>
-        <input type="text" name="name"/>
-        <label>Email</label>
-        <input type="email" name="email"/>
-        <label>Password</label>
-        <input type="password" name="password"/>
+    <h1>SignUp</h1>
+<form class="signup-form" action="/user" method="POST">
+    <label>Full Name</label>
+    <input type="text" id="fullname" name="name" required>
 
-        <button type="submit">Submit</button>
-    </form>
+    <label>Email</label>
+    <input type="email" id="email" name="email" required>
+
+    <label>Password</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Sign Up</button>
+</form>
+<style>
+    body {
+        background: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    h1 {
+        margin-top: 40px;
+        color: #333;
+    }
+    .signup-form {
+        position: relative;
+        z-index: 10;
+        background: #fff;
+        padding: 32px 28px;
+        border-radius: 10px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 320px;
+        margin-top: 24px;
+    }
+    .signup-form label {
+        font-weight: 500;
+        margin-bottom: 4px;
+        color: #444;
+    }
+    .signup-form input {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border 0.2s;
+        cursor: text;
+    }
+    .signup-form input:focus {
+        border-color: #0078d7;
+        outline: none;
+    }
+    .signup-form button {
+        margin-top: 12px;
+        padding: 12px;
+        background: #0078d7;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .signup-form button:hover {
+        background: #005fa3;
+    }
+</style>
 </body>
 </html>
