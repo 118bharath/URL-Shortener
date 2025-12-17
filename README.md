@@ -29,3 +29,20 @@ This project is designed as a hands-on learning exercise to:
 ```bash
 git clone https://github.com/<your-username>/node-url-shortener.git
 cd node-url-shortener
+
+
+Here are the API endpoints (URLs) currently defined in your project:
+
+User Routes (/user)
+POST /user/ - User Signup
+POST /user/login - User Login
+URL Routes (/url)
+POST /url/ - Calculate/Create Short URL (Protected: Normal/Admin)
+GET /url/:shortId - Redirect to Original URL (Public)
+GET /url/analytics/:shortId - Get URL Analytics (Protected: Normal/Admin)
+DELETE /url/:id - Delete Short URL (Protected: Owner/Admin)
+Static/View Routes (/)
+GET / - Home Page (Protected: Normal/Admin - shows user's URLs)
+GET /signup - Signup Page
+GET /login - Login Page
+GET /admin/urls - Admin Dashboard (Protected: Admin only - shows all URLs)

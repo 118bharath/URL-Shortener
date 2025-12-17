@@ -2,6 +2,7 @@
   "name": "url-shortener",
   "version": "1.0.0",
   "description": "A simple web service that shortens long URLs into concise, shareable links and tracks link analytics",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

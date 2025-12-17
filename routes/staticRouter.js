@@ -1,6 +1,6 @@
-const express = require('express');
-const URL = require('../models/url');
-const { restrictTo } = require('../middlewares/authMiddleware');
+import express from 'express';
+import URL from '../models/url.js';
+import { restrictTo } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -25,4 +25,4 @@ router.get('/login', (req, res) => {
     return res.render('login');
 })
 
-module.exports = router;
+export default router;

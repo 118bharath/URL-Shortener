@@ -1,10 +1,9 @@
-const express=require('express');
-const {handleUserSignUp,handleUserLogin}=require('../controllers/userController')
+import express from 'express';
+import { handleUserSignUp, handleUserLogin } from '../controllers/userController.js';
 
-const router=express.Router();
+const router = express.Router();
 
 router.post('/', handleUserSignUp);
 router.post('/login', handleUserLogin);
-router
 
-module.exports=router;
+export default router;

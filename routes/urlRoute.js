@@ -1,11 +1,15 @@
-const express=require('express');
-const {generateNewShortURL, handledeleteURL, handleRedirectURL, handleGetAnalytics}=require('../controllers/url')
+import express from 'express';
+import { generateNewShortURL, handledeleteURL, handleRedirectURL, handleGetAnalytics } from '../controllers/url.js';
+import { restrictTo } from '../middlewares/authMiddleware.js';
 
-const router=express.Router();
+const router = express.Router();
 
-router.post('/', generateNewShortURL);
-router.delete('/:id', handledeleteURL),
-router.get('/:shortId', handleRedirectURL),
-router.get('/analytics/:shortId', handleGetAnalytics)
+// Public Route (Redirect)
+router.get('/:shortId', handleRedirectURL);
 
-module.exports=router;
+// Protected Routes
+router.post('/', restrictTo(['NORMAL', 'ADMIN']), generateNewShortURL);
+router.delete('/:id', restrictTo(['NORMAL', 'ADMIN']), handledeleteURL);
+router.get('/analytics/:shortId', restrictTo(['NORMAL', 'ADMIN']), handleGetAnalytics);
+
+export default router;

@@ -1,26 +1,34 @@
-const express = require('express');
-const path = require('path');
-const dbConnection = require('./connection')
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
-const cookieParser = require('cookie-parser')
-const URL = require('./models/url')
-const { checkForAuthentication, restrictTo } = require('./middlewares/authMiddleware');
+import dbConnection from './connection.js';
+import URL from './models/url.js';
+import { checkForAuthentication, restrictTo } from './middlewares/authMiddleware.js';
 
 /*Routes*/
 
-const urlRoute = require('./routes/urlRoute');
-const staticRoute = require('./routes/staticRouter');
-const userRoute = require('./routes/userRoute');
+import urlRoute from './routes/urlRoute.js';
+import staticRoute from './routes/staticRouter.js';
+import userRoute from './routes/userRoute.js';
+
+dotenv.config();
+
+// Fix __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3001;
 
 dbConnection('mongodb://127.0.0.1:27017/url_shortener')
-    .then(console.log("MongoDB Connected"));
+    .then(() => console.log("MongoDB Connected"));
 
 
 app.set("view engine", "ejs");
-app.set('views', path.resolve("./views"));
+app.set('views', path.resolve(__dirname, "./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,7 +45,7 @@ app.get('/test', async (req,res)=>{
 */
 
 // Routes
-app.use("/url", restrictTo(['NORMAL', 'ADMIN']), urlRoute);
+app.use("/url", urlRoute);
 app.use("/user", userRoute);
 app.use("/", staticRoute);
 

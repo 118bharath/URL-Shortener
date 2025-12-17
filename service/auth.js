@@ -1,11 +1,11 @@
 // const sessionIdToUsermap=new Map();
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const secret = process.env.JWT_SECRET_KEY;
 
-const setUser = (user) => {
+export const setUser = (user) => {
     const payLoad = {
         _id: user._id,
         email: user.email,
@@ -14,7 +14,7 @@ const setUser = (user) => {
     return jwt.sign(payLoad, secret);
 }
 
-const getUser = (token) => {
+export const getUser = (token) => {
     if (!token) return null;
     try {
         return jwt.verify(token, secret);
@@ -23,7 +23,3 @@ const getUser = (token) => {
     }
 }
 
-module.exports = {
-    setUser,
-    getUser,
-}

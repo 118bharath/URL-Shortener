@@ -1,39 +1,39 @@
-const shortid =require('shortid');
-const URL=require('../models/url');
+import shortid from 'shortid';
+import URL from '../models/url.js';
 
-const generateNewShortURL= async(req,res)=>{
-    const body=req.body;
-    if(!body.url) return res.status(404).json({error: "url error"});
+export const generateNewShortURL = async (req, res) => {
+    const body = req.body;
+    if (!body.url) return res.status(404).json({ error: "url error" });
 
-    let entry=await URL.findOne({redirectURL:body.url});
-    if (entry){
-        const allUrls=await URL.find();
-        return res.render('home', {id: entry.shortId, urls: allUrls})
+    let entry = await URL.findOne({ redirectURL: body.url });
+    if (entry) {
+        const allUrls = await URL.find();
+        return res.render('home', { id: entry.shortId, urls: allUrls })
     }
-    const shortID=shortid();
+    const shortID = shortid();
     await URL.create({
-        shortId:shortID,
-        redirectURL:body.url,
-        visitHistory:[],
-        createdBy:req.user._id,
+        shortId: shortID,
+        redirectURL: body.url,
+        visitHistory: [],
+        createdBy: req.user._id,
     });
-    const allUrls=await URL.find();
+    const allUrls = await URL.find();
     return res.render("home", {
-        id:shortID,
+        id: shortID,
         urls: allUrls,
     })
 };
 
-const handleRedirectURL=async(req,res)=>{
-    const shortId=req.params.shortId;
+export const handleRedirectURL = async (req, res) => {
+    const shortId = req.params.shortId;
     const entry = await URL.findOneAndUpdate(
         {
             shortId,
         },
-        { 
-            $push : {
+        {
+            $push: {
                 visitHistory: {
-                    timestamp:Date.now(),
+                    timestamp: Date.now(),
                 }
             }
         }
@@ -41,24 +41,28 @@ const handleRedirectURL=async(req,res)=>{
     res.redirect(entry.redirectURL);
 };
 
-const handledeleteURL=async(req,res)=>{
-    const deleted=await URL.findByIdAndDelete(req.params.id);
-    if(!deleted) return res.status(404).json({message:"User not found"});
-    return res.status(200).json({message:"deleted", URL:deleted})
+export const handledeleteURL = async (req, res) => {
+    const { id } = req.params;
+    const url = await URL.findById(id);
+
+    if (!url) {
+        return res.status(404).json({ message: "URL not found" });
+    }
+
+    // IDOR Check: user must be creator or admin
+    if (url.createdBy.toString() !== req.user._id && req.user.role !== 'ADMIN') {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    await URL.findByIdAndDelete(id);
+    return res.status(200).json({ message: "deleted", URL: url })
 }
 
-const handleGetAnalytics=async(req,res)=>{
-    const shortId=req.params.shortId;
-    const result=await URL.findOne({shortId});
+export const handleGetAnalytics = async (req, res) => {
+    const shortId = req.params.shortId;
+    const result = await URL.findOne({ shortId });
     return res.json({
-        totalClicks:result.visitHistory.length,
-        analytics:result.visitHistory,
+        totalClicks: result.visitHistory.length,
+        analytics: result.visitHistory,
     })
 }
-
-module.exports={
-    generateNewShortURL,
-    handledeleteURL,
-    handleRedirectURL,
-    handleGetAnalytics,
-};
