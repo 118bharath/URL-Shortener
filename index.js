@@ -1,28 +1,31 @@
-const express=require('express');
-const path=require('path');
-const dbConnection=require('./connection')
-const cookieParser=require('cookie-parser')
-const URL=require('./models/url')
-const {restrictToLoggedinuserOnly, checkAuth}=require('./middlewares/authMiddleware');
+const express = require('express');
+const path = require('path');
+const dbConnection = require('./connection')
+
+const cookieParser = require('cookie-parser')
+const URL = require('./models/url')
+const { checkForAuthentication, restrictTo } = require('./middlewares/authMiddleware');
 
 /*Routes*/
 
-const urlRoute=require('./routes/urlRoute');
-const staticRoute=require('./routes/staticRouter');
-const userRoute=require('./routes/userRoute');
+const urlRoute = require('./routes/urlRoute');
+const staticRoute = require('./routes/staticRouter');
+const userRoute = require('./routes/userRoute');
 
-const app=express();
-const PORT=3001;
+const app = express();
+const PORT = 3001;
 
 dbConnection('mongodb://127.0.0.1:27017/url_shortener')
     .then(console.log("MongoDB Connected"));
 
+
 app.set("view engine", "ejs");
-app.set('views',path.resolve("./views"));
+app.set('views', path.resolve("./views"));
 
 app.use(express.json());
-app.use(express.urlencoded({extended:false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(checkForAuthentication);
 
 /*
 app.get('/test', async (req,res)=>{
@@ -34,9 +37,9 @@ app.get('/test', async (req,res)=>{
 */
 
 // Routes
-app.use("/url", restrictToLoggedinuserOnly, urlRoute);
+app.use("/url", restrictTo(['NORMAL', 'ADMIN']), urlRoute);
 app.use("/user", userRoute);
-app.use("/",checkAuth, staticRoute);
+app.use("/", staticRoute);
 
 
 app.listen(PORT, console.log(`Server started at PORT http://localhost:${PORT}/`));
@@ -48,4 +51,5 @@ Project flow
 2. Create Schema and model for database in models/url.js
 3. Create routes 
 4. Create functionalities for routes in Controllers/url.js
+cookies are domain specific
 */
