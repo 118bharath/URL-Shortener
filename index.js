@@ -4,7 +4,9 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { rateLimit } from 'express-rate-limit';
+import helmet from 'helmet';
 import logger from './service/logger.js';
+import errorHandler from './middlewares/errorMiddleware.js';
 
 import dbConnection from './connection.js';
 import URL from './models/url.js';
@@ -23,7 +25,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 dbConnection(process.env.MONGO_URL)
     .then(() => logger.info("MongoDB Connected"))
@@ -33,6 +35,11 @@ dbConnection(process.env.MONGO_URL)
 
 app.set("view engine", "ejs");
 app.set('views', path.resolve(__dirname, "./views"));
+
+// Security Headers
+app.use(helmet({
+    contentSecurityPolicy: false, // Disabled for now to allow inline scripts/styles (Tailwind CDN)
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -76,6 +83,8 @@ app.use("/url", urlRoute);
 app.use("/user", userRoute);
 app.use("/", staticRoute);
 
+// Global Error Handler
+app.use(errorHandler);
 
 app.listen(PORT, () => logger.info(`Server started at PORT http://localhost:${PORT}/`));
 

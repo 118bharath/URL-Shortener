@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import User from '../models/users.js';
 import { setUser } from '../service/auth.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-export const handleUserSignUp = async (req, res) => {
+export const handleUserSignUp = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
     try {
         await User.create({
@@ -21,12 +22,11 @@ export const handleUserSignUp = async (req, res) => {
             const message = Object.values(error.errors).map(val => val.message).join(', ');
             return res.render('signup', { error: message });
         }
-        return res.render('signup', {
-            error: "An error occurred. Please try again."
-        });
+        throw error; // Re-throw other errors to be caught by asyncHandler/global handler
     }
-}
-export const handleUserLogin = async (req, res) => {
+});
+
+export const handleUserLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
@@ -46,9 +46,9 @@ export const handleUserLogin = async (req, res) => {
     const token = setUser(user);
     res.cookie('token', token);
     return res.redirect('/');
-}
+});
 
-export const handleUserLogout = (req, res) => {
+export const handleUserLogout = asyncHandler(async (req, res) => {
     res.clearCookie('token');
     return res.redirect('/login');
-}
+});

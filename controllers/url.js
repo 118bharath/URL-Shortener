@@ -1,8 +1,9 @@
 import shortid from 'shortid';
 import URL from '../models/url.js';
 import { z } from 'zod';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-export const generateNewShortURL = async (req, res) => {
+export const generateNewShortURL = asyncHandler(async (req, res) => {
     const body = req.body;
 
     // Zod Validation schema
@@ -33,10 +34,16 @@ export const generateNewShortURL = async (req, res) => {
         id: shortID,
         urls: allUrls,
     })
-};
+});
 
-export const handleRedirectURL = async (req, res) => {
+export const handleRedirectURL = asyncHandler(async (req, res) => {
     const shortId = req.params.shortId;
+
+    // Input Sanitation: Ensure shortId only contains alphanumeric characters, _ and -
+    if (!/^[a-zA-Z0-9_-]+$/.test(shortId)) {
+        return res.status(400).render('home', { error: "Invalid short link format" });
+    }
+
     const entry = await URL.findOneAndUpdate(
         {
             shortId,
@@ -49,10 +56,13 @@ export const handleRedirectURL = async (req, res) => {
             }
         }
     );
+    if (!entry) {
+        return res.status(404).render('home', { error: "Link not found or expired" });
+    }
     res.redirect(entry.redirectURL);
-};
+});
 
-export const handledeleteURL = async (req, res) => {
+export const handledeleteURL = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const url = await URL.findById(id);
 
@@ -61,19 +71,20 @@ export const handledeleteURL = async (req, res) => {
     }
 
     // IDOR Check: user must be creator or admin
-    if (url.createdBy.toString() !== req.user._id && req.user.role !== 'ADMIN') {
+    if (url.createdBy.toString() !== req.user._id.toString() && req.user.role !== 'ADMIN') {
         return res.status(401).json({ error: "Unauthorized" });
     }
 
     await URL.findByIdAndDelete(id);
     return res.status(200).json({ message: "deleted", URL: url })
-}
+});
 
-export const handleGetAnalytics = async (req, res) => {
+export const handleGetAnalytics = asyncHandler(async (req, res) => {
     const shortId = req.params.shortId;
     const result = await URL.findOne({ shortId });
+    if (!result) return res.status(404).json({ error: "Not found" });
     return res.json({
         totalClicks: result.visitHistory.length,
         analytics: result.visitHistory,
     })
-}
+});
