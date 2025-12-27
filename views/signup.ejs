@@ -1,88 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>SignUp</h1>
-    <% if (locals.error) { %>
-    <div style="color: red; margin-bottom: 10px;">
-        <%= error %>
-    </div>
-    <% } %>
-<form class="signup-form" action="/user" method="POST">
-    <label>Full Name</label>
-    <input type="text" id="fullname" name="name" required>
+<%- include('partials/head') %>
 
-    <label>Email</label>
-    <input type="email" id="email" name="email" required>
+    <body class="flex flex-col min-h-screen relative">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,_rgba(0,255,133,0.05),_transparent_50%)] pointer-events-none">
+        </div>
+        <%- include('partials/header') %>
 
-    <label>Password</label>
-    <input type="password" id="password" name="password" required>
+            <main class="flex items-center justify-center flex-1 px-6 my-12">
+                <div
+                    class="w-full max-w-md bg-dark border border-gray-800 p-8 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden">
 
-    <button type="submit">Sign Up</button>
-</form>
-<style>
-    body {
-        background: #f5f7fa;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-    }
-    h1 {
-        margin-top: 40px;
-        color: #333;
-    }
-    .signup-form {
-        position: relative;
-        z-index: 10;
-        background: #fff;
-        padding: 32px 28px;
-        border-radius: 10px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 320px;
-        margin-top: 24px;
-    }
-    .signup-form label {
-        font-weight: 500;
-        margin-bottom: 4px;
-        color: #444;
-    }
-    .signup-form input {
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-        transition: border 0.2s;
-        cursor: text;
-    }
-    .signup-form input:focus {
-        border-color: #0078d7;
-        outline: none;
-    }
-    .signup-form button {
-        margin-top: 12px;
-        padding: 12px;
-        background: #0078d7;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .signup-form button:hover {
-        background: #005fa3;
-    }
-</style>
-</body>
+                    <div class="text-center mb-8">
+                        <i class="ri-user-add-line text-5xl text-neon-green mb-4 block"></i>
+                        <h2 class="text-3xl font-bold text-white tracking-wider">NEW OPERATOR</h2>
+                        <p class="text-gray-500 mt-2 font-mono text-xs">REGISTER TRANSMISSION ID</p>
+                    </div>
+
+                    <% if (locals.error) { %>
+                        <div
+                            class="mb-6 p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-lg flex items-center gap-3 animate-pulse">
+                            <i class="ri-error-warning-fill"></i>
+                            <span class="font-mono text-sm">
+                                <%= error %>
+                            </span>
+                        </div>
+                        <% } %>
+
+                            <form action="/user" method="POST" class="space-y-5">
+                                <div>
+                                    <label
+                                        class="block text-neon-blue text-xs font-bold tracking-widest mb-2 uppercase">Designation
+                                        (Name)</label>
+                                    <input type="text" name="name" required
+                                        class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-green focus:shadow-neon-green transition-all"
+                                        placeholder="Commander Shepard">
+                                </div>
+
+                                <div>
+                                    <label
+                                        class="block text-neon-blue text-xs font-bold tracking-widest mb-2 uppercase">Comms
+                                        Address (Email)</label>
+                                    <input type="email" name="email" required
+                                        class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-green focus:shadow-neon-green transition-all"
+                                        placeholder="scout@alliance.gov">
+                                </div>
+
+                                <div>
+                                    <label
+                                        class="block text-neon-blue text-xs font-bold tracking-widest mb-2 uppercase">Encryption
+                                        (Password)</label>
+                                    <input type="password" name="password" required
+                                        class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-green focus:shadow-neon-green transition-all"
+                                        placeholder="••••••••">
+                                    <p class="text-[10px] text-gray-500 mt-1 font-mono">MINIMUM 6 CHARACTERS REQUIRED
+                                    </p>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full py-4 bg-neon-green text-dark font-extrabold tracking-widest rounded-lg hover:bg-white hover:shadow-[0_0_20px_rgba(0,255,133,0.8)] transition-all duration-300 transform active:scale-95 mt-4">
+                                    ESTABLISH UPLINK
+                                </button>
+                            </form>
+
+                            <div class="mt-8 text-center">
+                                <p class="text-gray-600 text-sm">ALREADY REGISTERED? <a href="/login"
+                                        class="text-neon-blue hover:text-white hover:underline decoration-neon-blue underline-offset-4 transition-colors">LOGIN</a>
+                                </p>
+                            </div>
+                </div>
+            </main>
+
+            <%- include('partials/footer') %>
+    </body>
+
 </html>

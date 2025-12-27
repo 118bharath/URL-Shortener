@@ -35,6 +35,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthentication);
 
+// Middleware to expose user to views
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
+
 /*
 app.get('/test', async (req,res)=>{
     const allUrls=await URL.find({});

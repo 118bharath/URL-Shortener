@@ -47,3 +47,8 @@ export const handleUserLogin = async (req, res) => {
     res.cookie('token', token);
     return res.redirect('/');
 }
+
+export const handleUserLogout = (req, res) => {
+    res.clearCookie('token');
+    return res.redirect('/login');
+}

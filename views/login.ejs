@@ -1,92 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+<%- include('partials/head') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+    <body class="flex flex-col min-h-screen relative">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(30,144,255,0.1),_transparent_70%)] pointer-events-none">
+        </div>
+        <%- include('partials/header') %>
 
-<body>
-    <h1>
-        Login
-    </h1>
-    <form class="login-form" action="/user/login" method="POST">
-        <label>Email</label>
-        <input type="email" id="email" name="email" required>
+            <main class="flex items-center justify-center flex-1 px-6">
+                <div
+                    class="w-full max-w-md bg-dark border border-gray-800 p-8 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+                    <!-- Animated Border Effect -->
+                    <div
+                        class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-neon-blue to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000">
+                    </div>
 
-        <label>Password</label>
-        <input type="password" id="password" name="password" required>
+                    <div class="text-center mb-10">
+                        <i class="ri-fingerprint-line text-5xl text-neon-blue mb-4 block"></i>
+                        <h2 class="text-3xl font-bold text-white tracking-wider">ACCESS GRANTED</h2>
+                        <p class="text-gray-500 mt-2 font-mono text-xs">ENTER CREDENTIALS TO PROCEED</p>
+                    </div>
 
-        <button type="submit">Login</button>
-    </form>
-    <style>
-        body {
-            background: #f5f7fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+                    <% if (locals.error) { %>
+                        <div
+                            class="mb-6 p-4 bg-red-900/20 border border-red-500/50 text-red-400 rounded-lg flex items-center gap-3 animate-pulse">
+                            <i class="ri-error-warning-fill"></i>
+                            <span class="font-mono text-sm">
+                                <%= error %>
+                            </span>
+                        </div>
+                        <% } %>
 
-        h1 {
-            margin-top: 40px;
-            color: #333;
-        }
+                            <form action="/user/login" method="POST" class="space-y-6">
+                                <div class="group/input">
+                                    <label
+                                        class="block text-neon-green text-xs font-bold tracking-widest mb-2 uppercase">Email
+                                        Frequency</label>
+                                    <div class="relative">
+                                        <input type="email" name="email" required
+                                            class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-blue focus:shadow-neon-blue transition-all"
+                                            placeholder="OPERATOR@SYSTEM.NET">
+                                        <i
+                                            class="ri-mail-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within/input:text-neon-blue"></i>
+                                    </div>
+                                </div>
 
-        .login-form {
-            position: relative;
-            z-index: 10;
-            background: #fff;
-            padding: 32px 28px;
-            border-radius: 10px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 320px;
-            margin-top: 24px;
-        }
+                                <div class="group/input">
+                                    <label
+                                        class="block text-neon-green text-xs font-bold tracking-widest mb-2 uppercase">Security
+                                        Key</label>
+                                    <div class="relative">
+                                        <input type="password" name="password" required
+                                            class="w-full bg-black/50 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-neon-blue focus:shadow-neon-blue transition-all"
+                                            placeholder="••••••••">
+                                        <i
+                                            class="ri-lock-2-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within/input:text-neon-blue"></i>
+                                    </div>
+                                </div>
 
-        .login-form label {
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: #444;
-        }
+                                <button type="submit"
+                                    class="w-full py-4 bg-neon-blue text-dark font-extrabold tracking-widest rounded-lg hover:bg-white hover:shadow-[0_0_20px_rgba(30,144,255,0.8)] transition-all duration-300 transform active:scale-95">
+                                    INITIALIZE SESSION
+                                </button>
+                            </form>
 
-        .login-form input {
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border 0.2s;
-            cursor: text;
-        }
+                            <div class="mt-8 text-center">
+                                <p class="text-gray-600 text-sm">NO CLEARANCE? <a href="/signup"
+                                        class="text-neon-pink hover:text-white hover:underline decoration-neon-pink underline-offset-4 transition-colors">REQUEST
+                                        ACCESS</a></p>
+                            </div>
+                </div>
+            </main>
 
-        .login-form input:focus {
-            border-color: #0078d7;
-            outline: none;
-        }
-
-        .login-form button {
-            margin-top: 12px;
-            padding: 12px;
-            background: #0078d7;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .login-form button:hover {
-            background: #005fa3;
-        }
-    </style>
-</body>
+            <%- include('partials/footer') %>
+    </body>
 
 </html>

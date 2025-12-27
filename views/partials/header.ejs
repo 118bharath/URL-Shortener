@@ -1,0 +1,41 @@
+<header class="fixed top-4 left-0 right-0 z-50 flex justify-center">
+    <nav
+        class="bg-dark/90 backdrop-blur-md border border-neon-blue/30 rounded-2xl px-8 py-4 flex justify-between items-center w-[90%] max-w-7xl shadow-neon-blue">
+        <a href="/"
+            class="text-2xl font-bold tracking-widest text-white hover:text-neon-green transition-colors duration-300 flex items-center gap-2">
+            <i class="ri-flashlight-line text-neon-green"></i>
+            <span>SHORT<span class="text-neon-blue">IO</span></span>
+        </a>
+
+        <div class="flex items-center gap-6">
+            <% if (locals.user) { %>
+                <div class="hidden md:flex items-center gap-2">
+                    <span class="text-gray-400 text-xs uppercase tracking-widest">Operator:</span>
+                    <strong class="text-neon-green font-mono">
+                        <%= user.name %>
+                    </strong>
+                </div>
+
+                <% if (user.role==='ADMIN' ) { %>
+                    <a href="/admin/urls"
+                        class="text-gray-300 hover:text-neon-pink transition-colors font-medium flex items-center gap-1">
+                        <i class="ri-shield-keyhole-line"></i> Admin
+                    </a>
+                    <% } %>
+
+                        <a href="/user/logout"
+                            class="px-5 py-2 border border-neon-pink text-neon-pink hover:bg-neon-pink hover:text-white rounded-lg transition-all duration-300 shadow-[0_0_10px_rgba(255,0,153,0.3)] hover:shadow-neon-pink font-bold tracking-wider text-sm">
+                            LOGOUT
+                        </a>
+                        <% } else { %>
+                            <a href="/login"
+                                class="text-gray-300 hover:text-neon-blue transition-colors font-bold tracking-wide">LOGIN</a>
+                            <a href="/signup"
+                                class="px-6 py-2 bg-neon-green text-dark font-extrabold rounded-lg hover:bg-white hover:shadow-neon-green transition-all duration-300 tracking-wider">
+                                SIGN UP
+                            </a>
+                            <% } %>
+        </div>
+    </nav>
+</header>
+<div class="h-32"></div> <!-- Spacer -->

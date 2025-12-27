@@ -1,9 +1,20 @@
 import shortid from 'shortid';
 import URL from '../models/url.js';
+import { z } from 'zod';
 
 export const generateNewShortURL = async (req, res) => {
     const body = req.body;
-    if (!body.url) return res.status(404).json({ error: "url error" });
+
+    // Zod Validation schema
+    const schema = z.object({
+        url: z.string().url({ message: "Invalid URL format" })
+    });
+
+    const result = schema.safeParse(body);
+
+    if (!result.success) {
+        return res.status(400).json({ error: result.error.errors[0].message });
+    }
 
     let entry = await URL.findOne({ redirectURL: body.url });
     if (entry) {
