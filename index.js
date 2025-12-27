@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import { rateLimit } from 'express-rate-limit';
+import logger from './service/logger.js';
 
 import dbConnection from './connection.js';
 import URL from './models/url.js';
@@ -24,14 +26,33 @@ const app = express();
 const PORT = 3001;
 
 dbConnection(process.env.MONGO_URL)
-    .then(() => console.log("MongoDB Connected"));
+    .then(() => logger.info("MongoDB Connected"))
+    .catch((err) => logger.error("MongoDB Connection Error", err));
 
+// ... (middleware and routes)
 
 app.set("view engine", "ejs");
 app.set('views', path.resolve(__dirname, "./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Rate Limiting: 100 requests per 15 minutes
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 100,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: "Too many requests from this IP, please try again after 15 minutes"
+});
+app.use(limiter);
+
+// Request Logger
+app.use((req, res, next) => {
+    logger.info(`${req.method} ${req.url}`);
+    next();
+});
+
 app.use(cookieParser());
 app.use(checkForAuthentication);
 
@@ -56,7 +77,7 @@ app.use("/user", userRoute);
 app.use("/", staticRoute);
 
 
-app.listen(PORT, console.log(`Server started at PORT http://localhost:${PORT}/`));
+app.listen(PORT, () => logger.info(`Server started at PORT http://localhost:${PORT}/`));
 
 
 /*
