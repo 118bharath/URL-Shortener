@@ -23,7 +23,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3001;
 
-dbConnection('mongodb://127.0.0.1:27017/url_shortener')
+dbConnection(process.env.MONGO_URL)
     .then(() => console.log("MongoDB Connected"));
 
 
