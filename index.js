@@ -27,9 +27,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-dbConnection(process.env.MONGO_URL)
-    .then(() => logger.info("MongoDB Connected"))
-    .catch((err) => logger.error("MongoDB Connection Error", err));
+// DB Connection moved to end of file
 
 // ... (middleware and routes)
 
@@ -86,7 +84,15 @@ app.use("/", staticRoute);
 // Global Error Handler
 app.use(errorHandler);
 
-app.listen(PORT, () => logger.info(`Server started at PORT http://localhost:${PORT}/`));
+dbConnection(process.env.MONGO_URL)
+    .then(() => {
+        app.listen(PORT, () => logger.info(`Server started at PORT http://localhost:${PORT}/`));
+    })
+    .catch((err) => {
+        logger.error("MongoDB Connection Error", err);
+        process.exit(1);
+    });
+
 
 
 /*
