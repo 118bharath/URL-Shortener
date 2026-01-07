@@ -1,0 +1,41 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # 1. Setup/Update Repo (Cloning if first time)
+            if [ ! -d "URL-Shortener" ]; then
+              git clone https://github.com/118bharath/URL-Shortener.git
+            fi
+            cd URL-Shortener
+            git pull origin master
+            
+            # 2. Build Docker Image (on the server)
+            docker build -t shortio-app .
+            
+            # 3. Stop & Remove Old Container
+            docker stop shortio-container || true
+            docker rm shortio-container || true
+            
+            # 4. Run New Container (Injecting Secrets)
+            docker run -d \
+              --name shortio-container \
+              -p 3001:3001 \
+              -e PORT=3001 \
+              -e MONGO_URL="${{ secrets.MONGO_URL }}" \
+              --restart always \
+              shortio-app

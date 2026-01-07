@@ -18,7 +18,12 @@ import urlRoute from './routes/urlRoute.js';
 import staticRoute from './routes/staticRouter.js';
 import userRoute from './routes/userRoute.js';
 
-dotenv.config();
+import { existsSync } from 'fs';
+
+// Only load .env file if it exists (not in Docker production)
+if (existsSync('.env')) {
+    dotenv.config();
+}
 
 // Fix __dirname for ESM
 const __filename = fileURLToPath(import.meta.url);
