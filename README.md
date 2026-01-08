@@ -1,48 +1,116 @@
-# node-url-shortener
+# URL Shortener
 
-A simple, beginner-friendly URL shortener built with **Node.js**, **Express**, and **MongoDB**.  
-Made while learning backend development fundamentals — routing, request validation, database CRUD, and basic testing.
+A URL shortening service built with Node.js, Express, and MongoDB. Users can create shortened links, track click analytics, and manage their URLs through a web interface.
 
 ## Features
-- Create short URLs for long links
-- Redirect short URLs to the original link
-- View details / analytics for a short link (click count, original URL)
-- Basic input validation and error handling
-- Docker-friendly and ready for small deployments
 
-## Tech stack
-- Node.js + Express
-- MongoDB (Mongoose)
-- Short ID generation: `nanoid` (or `shortid`)
-- Environment management: `dotenv`
-- Optional: Docker + `docker-compose`
+- User authentication with JWT tokens
+- Create and manage shortened URLs
+- Click tracking and basic analytics
+- Role-based access control (User/Admin)
+- Server-side rendered views with EJS
+- Docker support for containerized deployment
 
-## Why this project?
-This project is designed as a hands-on learning exercise to:
-1. Get comfortable with Express routing and middleware.
-2. Learn to model data with Mongoose and persist data in MongoDB.
-3. Understand URL redirection, HTTP status codes, and basic analytics.
-4. Practice building a public API and simple frontend (optional).
+## Tech Stack
 
-## Quick start
-1. Clone the repo
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB with Mongoose ODM
+- **Authentication:** JWT, bcrypt
+- **Templating:** EJS
+- **Styling:** Tailwind CSS
+- **Containerization:** Docker
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- MongoDB instance (local or Atlas)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+
 ```bash
-git clone https://github.com/<your-username>/node-url-shortener.git
-cd node-url-shortener
+git clone https://github.com/118bharath/URL-Shortener.git
+cd URL-Shortener
+```
 
+2. Install dependencies
 
-Here are the API endpoints (URLs) currently defined in your project:
+```bash
+npm install
+```
 
-User Routes (/user)
-POST /user/ - User Signup
-POST /user/login - User Login
-URL Routes (/url)
-POST /url/ - Calculate/Create Short URL (Protected: Normal/Admin)
-GET /url/:shortId - Redirect to Original URL (Public)
-GET /url/analytics/:shortId - Get URL Analytics (Protected: Normal/Admin)
-DELETE /url/:id - Delete Short URL (Protected: Owner/Admin)
-Static/View Routes (/)
-GET / - Home Page (Protected: Normal/Admin - shows user's URLs)
-GET /signup - Signup Page
-GET /login - Login Page
-GET /admin/urls - Admin Dashboard (Protected: Admin only - shows all URLs)
+3. Create a `.env` file in the root directory
+
+```
+MONGODB_URI=your_mongodb_connection_string
+SECRET_KEY=your_jwt_secret
+PORT=3001
+```
+
+4. Start the development server
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3001`
+
+### Docker
+
+Build and run using Docker:
+
+```bash
+docker build -t url-shortener .
+docker run -p 3001:3001 --env-file .env url-shortener
+```
+
+## API Reference
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/user/` | Register a new user |
+| POST | `/user/login` | Login and receive JWT token |
+| GET | `/user/logout` | Logout and clear session |
+
+### URL Management
+
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| POST | `/url/` | Create a shortened URL | Authenticated |
+| GET | `/url/:shortId` | Redirect to original URL | Public |
+| GET | `/url/analytics/:shortId` | Get click analytics | Authenticated |
+| DELETE | `/url/:id` | Delete a URL | Owner or Admin |
+
+### Pages
+
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| GET | `/` | Home page with user's URLs | Authenticated |
+| GET | `/signup` | Registration page | Public |
+| GET | `/login` | Login page | Public |
+| GET | `/admin/urls` | Admin dashboard | Admin only |
+
+## Project Structure
+
+```
+├── controllers/       # Route handlers
+├── middlewares/       # Auth and validation middleware
+├── models/           # Mongoose schemas
+├── routes/           # Express route definitions
+├── service/          # Business logic (auth, etc.)
+├── views/            # EJS templates
+├── utils/            # Helper functions
+├── index.js          # Application entry point
+└── connection.js     # Database connection
+```
+
+## License
+
+MIT
